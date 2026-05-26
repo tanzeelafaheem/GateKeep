@@ -7,7 +7,7 @@ function Sidebar() {
 
   const menuItems = [
     { name: 'Dashboard', path: '/resident/dashboard', icon: <FaHome /> },
-    { name: 'Create Pass', path: '/resident/create-pass', icon: <FaQrcode /> },
+    { name: 'Create Pass', path: '/resident/invite-guest', icon: <FaQrcode /> },
     { name: 'My Guests', path: '/resident/my-guests', icon: <FaUserFriends /> },
     { name: 'History', path: '/resident/history', icon: <FaHistory /> },
     { name: 'Settings', path: '/resident/settings', icon: <CiSettings /> }

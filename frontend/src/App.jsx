@@ -4,6 +4,7 @@ import Dashboard from './pages/resident/Dashboard';
 import History from './pages/resident/History';
 import MyGuests from './pages/resident/MyGuests';
 import Settings from './pages/resident/Settings';
+import InviteGuest from './pages/resident/InviteGuest';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Route path="/resident/history" element={<History />} />
       <Route path="/resident/my-guests" element={<MyGuests />} />
       <Route path="/resident/settings" element={<Settings />} />
+      <Route path="/resident/invite-guest" element={<InviteGuest />} />
     </Routes>
   );
 }

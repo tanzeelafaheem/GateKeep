@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Navbar = () => {
+const Navbar = ({heading}) => {
   const name = 'Tanzeela';
   const [flat] = useState(102);
 
@@ -10,7 +10,7 @@ const Navbar = () => {
       <div className="h-10 flex items-center justify-between">
 
         <div className="text-base font-bold">
-          Dashboard
+          {heading}
         </div>
 
         <div className="flex items-center gap-4">
