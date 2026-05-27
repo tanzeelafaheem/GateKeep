@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
+import {Link} from "react-router-dom";
 
 const InviteGuest = () => {
   const [step, setstep] = useState(1);
@@ -131,7 +132,9 @@ ${step >= 3 ? "bg-green-700 text-white" : "bg-gray-300"}
 )}
 {step==3&&(
   <div className="group w-110 mx-auto mt-4 bg-[#1a2b3c] rounded-lg p-2 text-center hover:bg-white cursor-pointer border-2 border-gray-300" onClick={() => setstep(step + 1)}>
-  <button className="text-white group-hover:text-[#1a2b3c] cursor-pointer">Generate QR</button>
+  <Link to="/viewQR">
+    <button className="text-white group-hover:text-[#1a2b3c] cursor-pointer">Generate QR</button>
+  </Link>
 </div>
 )}
     </>
