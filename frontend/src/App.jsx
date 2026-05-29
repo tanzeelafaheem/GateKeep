@@ -5,6 +5,7 @@ import History from './pages/resident/History';
 import MyGuests from './pages/resident/MyGuests';
 import Settings from './pages/resident/Settings';
 import InviteGuest from './pages/resident/InviteGuest';
+import ViewQR from './components/ViewQR';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/resident/my-guests" element={<MyGuests />} />
       <Route path="/resident/settings" element={<Settings />} />
       <Route path="/resident/invite-guest" element={<InviteGuest />} />
+      <Route path="/viewQR" element={<ViewQR />} />
     </Routes>
   );
 }
