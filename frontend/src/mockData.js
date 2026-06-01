@@ -53,43 +53,106 @@ const mockData = {
 
   // Invitation History
   history: [
+  {
+    id: 1,
+    guestName: "Rahul Sharma",
+    phone: "9876543210",
+    visitDate: "2026-05-25",
+    purpose: "Dinner",
+    status: "Completed",
+  },
+  {
+    id: 2,
+    guestName: "Aman Khan",
+    phone: "9876543211",
+    visitDate: "2026-05-24",
+    purpose: "Meeting",
+    status: "Completed",
+  },
+  {
+    id: 3,
+    guestName: "Priya Singh",
+    phone: "9876543212",
+    visitDate: "2026-05-23",
+    purpose: "Delivery",
+    status: "Rejected",
+  },
+  {
+    id: 4,
+    guestName: "Neha Gupta",
+    phone: "9876543213",
+    visitDate: "2026-05-22",
+    purpose: "Family Visit",
+    status: "Completed",
+  },
+],
+myGuests : [
     {
-      id: 101,
-      guestName: "Neha Gupta",
+      id: 1,
+      guestName: "Rahul Sharma",
+      phone: "9876543210",
+      visitDate: "2026-05-27",
+      visitTime: "18:30",
+      purpose: "Dinner",
+      status: "Approved",
+      qrCode: "QR001",
+    },
+
+    {
+      id: 2,
+      guestName: "Aman Khan",
+      phone: "9876543211",
+      visitDate: "2026-05-28",
+      visitTime: "10:00",
+      purpose: "Business Meeting",
+      status: "Pending",
+      qrCode: "QR002",
+    },
+
+    {
+      id: 3,
+      guestName: "Priya Verma",
+      phone: "9876543212",
+      visitDate: "2026-05-25",
+      visitTime: "15:00",
+      purpose: "Family Visit",
+      status: "Completed",
+      qrCode: "QR003",
+    },
+
+    {
+      id: 4,
+      guestName: "Rohit Singh",
+      phone: "9876543213",
       visitDate: "2026-05-20",
-      status: "Completed",
-      entryTime: "11:10",
-      exitTime: "13:30"
-    },
-
-    {
-      id: 102,
-      guestName: "Arjun Yadav",
-      visitDate: "2026-05-21",
-      status: "Rejected",
-      entryTime: null,
-      exitTime: null
-    },
-
-    {
-      id: 103,
-      guestName: "Sana Ali",
-      visitDate: "2026-05-22",
-      status: "Completed",
-      entryTime: "17:00",
-      exitTime: "19:15"
-    },
-
-    {
-      id: 104,
-      guestName: "Rohan Kapoor",
-      visitDate: "2026-05-23",
+      visitTime: "12:00",
+      purpose: "Courier Pickup",
       status: "Expired",
-      entryTime: null,
-      exitTime: null
-    }
-  ]
+      qrCode: "QR004",
+    },
 
+    {
+      id: 5,
+      guestName: "Neha Gupta",
+      phone: "9876543214",
+      visitDate: "2026-05-29",
+      visitTime: "19:00",
+      purpose: "Birthday Party",
+      status: "Approved",
+      qrCode: "QR005",
+    },
+
+    {
+      id: 6,
+      guestName: "Arjun Mehta",
+      phone: "9876543215",
+      visitDate: "2026-05-30",
+      visitTime: "09:30",
+      purpose: "Maintenance Work",
+      status: "Pending",
+      qrCode: "QR006",
+    },
+  ],
 };
 
 export default mockData;

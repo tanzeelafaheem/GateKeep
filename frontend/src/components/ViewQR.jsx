@@ -10,8 +10,8 @@ const ViewQR = ({
   setStep,
   setGuestData,
 }) => {
-   
-  const navigate=useNavigate();
+
+  const navigate = useNavigate();
   const qrData = JSON.stringify({
     name: guestData.guestName,
     phone: guestData.phone,
@@ -241,6 +241,7 @@ const ViewQR = ({
             justify-center
             items-center
             gap-2
+            cursor-pointer
             ">
 
               <FaWhatsapp />
@@ -263,6 +264,7 @@ const ViewQR = ({
               items-center
               gap-2
               hover:bg-gray-50
+              cursor-pointer
               ">
 
                 <FiDownload />
@@ -274,12 +276,12 @@ const ViewQR = ({
 
 
               <button
-                onClick={() => { 
-  setShowQR(false); 
-  setStep(1); 
-  setGuestData({ guestName: "", phone: "", visitDate: "", visitTime: "", purpose: "" }); 
-  navigate("/resident/dashboard"); 
-}}
+                onClick={() => {
+                  setShowQR(false);
+                  setStep(1);
+                  setGuestData({ guestName: "", phone: "", visitDate: "", visitTime: "", purpose: "" });
+                  navigate("/resident/dashboard");
+                }}
 
 
                 className="
@@ -298,7 +300,7 @@ const ViewQR = ({
 
                 <FiHome />
 
-                Dashboard
+                Back
 
               </button>
 
