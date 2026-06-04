@@ -5,6 +5,18 @@ import { Link, useLocation } from 'react-router-dom';
 function Sidebar() {
   const location = useLocation();
 
+  const handleLogout = () => {
+    // Displays native browser popup confirmation
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    
+    if (confirmLogout) {
+      // Clear user data (example: localStorage or sessionStorage)
+      localStorage.removeItem("token"); 
+      
+      // Redirect your user (example: refresh or routing)
+      window.location.href = "/"; 
+    }
+  };
   const menuItems = [
     { name: 'Dashboard', path: '/resident/dashboard', icon: <FaHome /> },
     { name: 'Create Pass', path: '/resident/invite-guest', icon: <FaQrcode /> },
@@ -15,6 +27,8 @@ function Sidebar() {
 
   return (
     <div className="fixed left-0 top-0 w-[180px] h-screen bg-[#1a2b3c] text-white pt-10">
+      <h2 className='text-green-500 font-bold px-4'>GATE KEEP</h2>
+     <p className="text-gray-500 text-sm px-4 mb-5">Resident portal</p>
 
       <div className="flex flex-col gap-2 px-4">
         {menuItems.map((item, index) => {
@@ -36,7 +50,10 @@ function Sidebar() {
           );
         })}
       </div>
-
+      <button className="absolute bottom-5 left-4 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 rounded-lg px-6 py-2.5 text-sm text-white font-medium w-35 cursor-pointer"
+      onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 }
