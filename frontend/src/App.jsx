@@ -6,6 +6,7 @@ import MyGuests from './pages/resident/MyGuests';
 import Settings from './pages/resident/Settings';
 import InviteGuest from './pages/resident/InviteGuest';
 import ViewQR from './components/ViewQR';
+import QRscan from './pages/guard/QRscan';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route path="/resident/settings" element={<Settings />} />
       <Route path="/resident/invite-guest" element={<InviteGuest />} />
       <Route path="/viewQR" element={<ViewQR />} />
+      <Route path="/guard/qr-scan" element={<QRscan />} />
     </Routes>
   );
 }
