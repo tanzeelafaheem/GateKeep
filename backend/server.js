@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
+import residentRoutes from "./routes/residentRoutes.js";
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ await connectDB();
 app.get('/', (req, res) => {
   res.send('Server is running successfully!');
 });
+
+app.use("/api/residents", residentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
