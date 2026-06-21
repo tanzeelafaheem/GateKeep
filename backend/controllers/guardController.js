@@ -82,3 +82,44 @@ export const getGuardProfile = async (req, res) => {
         });
     }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, employeeId, phone, password, gate } = req.body;
+    const updateData = {};
+
+    // Only add fields to update if they are provided in the request body
+    if (name) updateData.name = name;
+    if (employeeId) updateData.employeeId = employeeId;
+    if (phone) updateData.phone = phone;
+    if (gate) updateData.gate = gate;
+
+    // Handle password hashing if the guard is changing their password
+    if (password) {
+      updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    const updatedGuard = await Guard.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateData },
+      { new: true }
+    );  
+    if (!updatedGuard) {
+      return res.status(404).json({
+        success: false,
+        message: "Guard not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      guard: updatedGuard,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

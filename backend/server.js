@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import residentRoutes from "./routes/residentRoutes.js";
 import guardRoutes from "./routes/guardRoutes.js";
+import guestRoutes from "./routes/guestsRoutes.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 
 app.use("/api/residents", residentRoutes);
 app.use("/api/guards", guardRoutes);
+app.use("/api/guests", guestRoutes);
 
 const PORT = process.env.PORT || 5000;
 

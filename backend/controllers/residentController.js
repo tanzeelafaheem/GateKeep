@@ -130,3 +130,64 @@ export const updateProfile = async (req, res) => {
     });
   }
 };
+
+export const getResidentDashboard = async (req, res) => {
+  try {
+    const { residentId } = req.params;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const [
+      activeInvitations,
+      expectedToday,
+      entriesToday,
+      activeGuestList,
+    ] = await Promise.all([
+      Guest.countDocuments({
+        resident: residentId,
+        status: "Pending",
+      }),
+
+      Guest.countDocuments({
+        resident: residentId,
+        visitDate: {
+          $gte: today,
+          $lt: tomorrow,
+        },
+      }),
+
+      Guest.countDocuments({
+        resident: residentId,
+        status: "Entered",
+        entryTime: {
+          $gte: today,
+          $lt: tomorrow,
+        },
+      }),
+
+      Guest.find({
+        resident: residentId,
+        status: "Pending",
+      }).sort({ createdAt: -1 }),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      dashboard: {
+        activeInvitations,
+        expectedToday,
+        entriesToday,
+        activeGuestList,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
