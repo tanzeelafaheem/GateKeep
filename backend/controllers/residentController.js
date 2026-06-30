@@ -65,8 +65,9 @@ export const loginResident = async (req, res) => {
     }
 
     res.status(200).json({
-      success: true,
-      resident,
+       success: true,
+      role: "resident",
+      user: resident,
     });
   } catch (error) {
     res.status(500).json({
@@ -162,7 +163,7 @@ export const getResidentDashboard = async (req, res) => {
 
       Guest.countDocuments({
         resident: residentId,
-        status: "Entered",
+        status: "Approved",
         entryTime: {
           $gte: today,
           $lt: tomorrow,

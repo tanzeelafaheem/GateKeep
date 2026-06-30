@@ -52,9 +52,10 @@ const Login = () => {
 
       const response = await API.post(endpoint, payload);
       const data = response.data;
+      console.log(data);
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+     localStorage.setItem("role", response.data.role);  
+     localStorage.setItem("user",JSON.stringify(response.data.user));
 
       toast.success("Login Successful");
 

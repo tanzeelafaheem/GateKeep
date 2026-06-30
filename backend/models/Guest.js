@@ -42,7 +42,6 @@ const guestSchema = new mongoose.Schema(
       type: String,
       enum: [
         "Pending",
-        "Approved",
         "Entered",
         "Completed",
         "Expired",

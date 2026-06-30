@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/register", registerResident);
 router.post("/login", loginResident);
 router.get("/profile/:id", getResidentProfile);
-router.post("/edit-profile/:id", updateProfile);
-router.get("/dashboard/:id", getResidentDashboard);
+router.post("/edit-profile/:residentId", updateProfile);
+router.get("/dashboard/:residentId", getResidentDashboard);
 
 export default router;

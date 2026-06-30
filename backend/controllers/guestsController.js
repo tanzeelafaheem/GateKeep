@@ -76,13 +76,25 @@ export const createGuest = async (req, res) => {
 |--------------------------------------------------------------------------
 */
 
+/*
+|--------------------------------------------------------------------------
+| Get All Guests Of Resident (Supports Recent Limit & Full History)
+|--------------------------------------------------------------------------
+*/
 export const getResidentGuests = async (req, res) => {
   try {
     const { residentId } = req.params;
+    
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
 
-    const guests = await Guest.find({
-      resident: residentId,
-    }).sort({ createdAt: -1 });
+    let query = Guest.find({ resident: residentId }).sort({ createdAt: -1 });
+
+    // Apply limit only if the frontend explicitly asks for it
+    if (limit) {
+      query = query.limit(limit);
+    }
+
+    const guests = await query;
 
     res.status(200).json({
       success: true,
@@ -91,13 +103,13 @@ export const getResidentGuests = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
+
 
 /*
 |--------------------------------------------------------------------------
@@ -205,6 +217,41 @@ export const approveGuest = async (req, res) => {
     });
   }
 };
+
+export const rejectGuest = async (req, res) => {
+  try {
+    const { guestId } = req.params;
+
+    const guest = await Guest.findById(guestId);
+
+    if (!guest) {
+      return res.status(404).json({
+        success: false,
+        message: "Guest not found",
+      });
+    }
+
+    guest.status = "Rejected";
+    guest.entryTime = new Date();
+
+    await guest.save();
+
+    res.status(401).json({
+      success: true,
+      message: "Guest entry not approved",
+      guest,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 
 /*
 |--------------------------------------------------------------------------

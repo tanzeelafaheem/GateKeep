@@ -7,6 +7,7 @@ import {
   approveGuest,
   completeVisit,
   deleteGuest,
+  rejectGuest
 } from "../controllers/guestsController.js";
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router.get("/resident/:residentId", getResidentGuests);
 router.get("/:guestId", getGuestById);
 router.get("/verify/:guestId", verifyGuest);
 router.patch("/approve/:guestId", approveGuest);
+router.patch("/reject/:guestId",rejectGuest)
 router.patch("/complete/:guestId", completeVisit);
 router.delete("/:guestId", deleteGuest);
 

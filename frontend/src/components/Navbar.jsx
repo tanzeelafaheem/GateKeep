@@ -1,8 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Navbar = ({heading}) => {
-  const name = 'Tanzeela';
-  const [flat] = useState(102);
+ const [flat,setFlat] = useState(0);
+const [name, setName] = useState("");
+
+useEffect(() => {
+  const savedUserJson = localStorage.getItem("user");
+
+  if (savedUserJson) {
+    const userObj = JSON.parse(savedUserJson);
+    setName(userObj.name);
+    setFlat(userObj.flatNo);
+    // console.log("Logged-in User Name:", userObj.name); 
+  } else {
+    console.log("⚠️ No user is logged in.");
+  }
+}, []);
+
 
   return (
     <nav className="fixed top-0 left-[180px] w-[calc(100%-180px)] z-50 bg-white border-b border-slate-300 px-8 py-1">
