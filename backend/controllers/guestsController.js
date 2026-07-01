@@ -85,21 +85,38 @@ export const getResidentGuests = async (req, res) => {
   try {
     const { residentId } = req.params;
     
+    // Parse query parameters safely
+    const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
 
+    // 1. Get total count for metadata (needed by the history page pagination)
+    const totalGuests = await Guest.countDocuments({ resident: residentId });
+
+    // 2. Build the base query
     let query = Guest.find({ resident: residentId }).sort({ createdAt: -1 });
 
-    // Apply limit only if the frontend explicitly asks for it
+    // 3. Apply pagination conditionally based on what the frontend requests
     if (limit) {
-      query = query.limit(limit);
+      if (page) {
+        // Scenario 1: History Page (with page and limit)
+        const skip = (page - 1) * limit;
+        query = query.skip(skip).limit(limit);
+      } else {
+        // Scenario 2: Dashboard (only a limit, no page parameter)
+        query = query.limit(limit);
+      }
     }
 
     const guests = await query;
 
+    // 4. Return standard response along with pagination metadata
     res.status(200).json({
       success: true,
       count: guests.length,
       guests,
+      // Metadata fields defaults when no pagination parameters are used
+      currentPage: page || 1,
+      totalPages: limit ? Math.ceil(totalGuests / limit) : 1,
     });
   } catch (error) {
     console.error(error);
@@ -109,6 +126,7 @@ export const getResidentGuests = async (req, res) => {
     });
   }
 };
+
 
 
 /*

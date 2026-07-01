@@ -40,7 +40,7 @@ const Dashboard = () => {
         `/api/guests/resident/${residentId}`,
         {
           params: {
-            limit: 5,
+            limit: 4,
           },
         }
       );
@@ -217,7 +217,9 @@ const Dashboard = () => {
               </h2>
 
               <button className="text-[11px] text-blue-600">
-                View Full Log
+                <Link to="/resident/history">
+                  View Full Log
+                </Link>
               </button>
             </div>
 
