@@ -3,13 +3,37 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import mockData from "../../mockData";
 import { CiCalendar } from "react-icons/ci";
+import API from "../../api";
+import { useEffect, useState } from "react";
 
 const MyGuests = () => {
+  const[guests,setGuests]=useState([]);
+   const user = JSON.parse(localStorage.getItem("user"));
+  const residentId = user?._id;
+
+
+   const fetchHistory = async () => {
+      if (!residentId) return;
+      try {
+        const res = await API.get(
+          `/api/guests/resident/${residentId}?limit=10`
+        );
+  
+        setGuests(res.data.guests || []);
+      } catch (error) {
+        console.error("Failed to fetch history:", error);
+      }
+    };
+
+     useEffect(() => {
+        fetchHistory()
+      }, [residentId]);
+
   return (
   <div className="flex h-screen overflow-hidden">
   <Sidebar />
 
-  <div className="flex flex-col flex-1 ml-[180px]">
+  <div className="flex flex-col flex-1 ml-45">
     <Navbar heading="My Guests" />
 
     <div className="flex-1 mt-10 p-5 bg-gray-100 overflow-y-auto h-[calc(100vh-80px)]">
@@ -96,10 +120,10 @@ const MyGuests = () => {
 
               <tbody>
 
-                {mockData.myGuests.map((entry) => (
+                {guests.map((entry) => (
 
                   <tr
-                    key={entry.id}
+                    key={entry._id}
                     className=" text-sm hover:bg-gray-50"
                   >
 
@@ -107,7 +131,7 @@ const MyGuests = () => {
 
                       <div>
                         <p className="font-medium">
-                          {entry.guestName}
+                          {entry.name}
                         </p>
 
                         <p className="text-xs text-gray-500">
@@ -130,9 +154,15 @@ const MyGuests = () => {
                       <span
                         className={`px-3 py-1 rounded-full text-xs
                         ${
-                          entry.status === "Completed"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
+                          entry.status === "Approved"
+                ? "bg-green-100 text-green-700"
+                : entry.status === "Pending"
+                ? "bg-yellow-100 text-yellow-700"
+                : entry.status === "Completed"
+                ? "bg-blue-100 text-blue-700"
+                : entry.status === "Expired"
+                ? "bg-red-100 text-red-700"
+                : "bg-gray-100 text-gray-700"
                         }`}
                       >
                         {entry.status}

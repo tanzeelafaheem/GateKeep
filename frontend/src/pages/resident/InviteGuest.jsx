@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import ViewQR from "../../components/ViewQR";
+import API from "../../api";
 
 const InviteGuest = () => {
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [generatedGuest, setGeneratedGuest] = useState(null);
   const [showQR, setShowQR] = useState(false);
-
   const [guestData, setGuestData] = useState({
     guestName: "",
     phone: "",
@@ -14,6 +16,38 @@ const InviteGuest = () => {
     visitTime: "",
     purpose: "",
   });
+
+  const createGuestInvitation = async () => {
+  try {
+    setLoading(true);
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const payload = {
+      residentId: user._id,
+      ...guestData,
+    };
+
+    const res = await API.post(
+      "/api/guests/create",
+      payload
+    );
+
+    if (res.data.success) {
+      setGeneratedGuest(res.data.guest);
+
+      setShowQR(true);
+    }
+  } catch (error) {
+    console.error(
+      error.response?.data || error.message
+    );
+
+    alert("Failed to create invitation");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleChange = (e) => {
     setGuestData({
@@ -33,11 +67,11 @@ const InviteGuest = () => {
       {/* SHOW QR COMPONENT */}
       {showQR ? (
         <ViewQR
-          guestData={guestData}
-          setShowQR={setShowQR}
-          setStep={setStep}
-          setGuestData={setGuestData}
-        />
+  guestData={generatedGuest}
+  setShowQR={setShowQR}
+  setStep={setStep}
+  setGuestData={setGuestData}
+/>
       ) : (
         <>
           {/* PROGRESS BAR */}
@@ -122,8 +156,8 @@ const InviteGuest = () => {
 
               <input
                 type="text"
-                name="guestName"
-                value={guestData.guestName}
+                name="name"
+                value={guestData.name}
                 onChange={handleChange}
                 placeholder="Name"
                 className="bg-white mt-1 mb-3 border border-gray-300 rounded-lg p-2"
@@ -209,7 +243,7 @@ const InviteGuest = () => {
                   <span className="font-semibold">
                     Name:
                   </span>{" "}
-                  {guestData.guestName}
+                  {guestData.name}
                 </p>
 
                 <p>
@@ -258,12 +292,12 @@ const InviteGuest = () => {
           {/* GENERATE QR BUTTON */}
           {step === 3 && (
             <div
-              onClick={() => setShowQR(true)}
+              onClick={createGuestInvitation}
               className="group w-[440px] mx-auto mt-4 bg-[#1a2b3c] rounded-lg p-3 text-center hover:bg-white cursor-pointer border-2 border-gray-300"
             >
               <button className="text-white group-hover:text-[#1a2b3c]">
-                Generate QR
-              </button>
+  {loading ? "Generating..." : "Generate QR"}
+</button>
             </div>
           )}
         </>

@@ -65,7 +65,7 @@ const Dashboard = () => {
     <div className="flex h-screen overflow-hidden">
       <SideBar />
 
-      <div className="flex flex-col flex-1 ml-[180px]">
+      <div className="flex flex-col flex-1 ml-45">
         <Navbar heading="Dashboard" />
 
         <div className="flex-1 mt-10 p-5 bg-gray-100 overflow-y-auto">
