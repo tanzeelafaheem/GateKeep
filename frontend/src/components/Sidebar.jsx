@@ -1,20 +1,21 @@
 import { FaHome, FaUserFriends, FaQrcode, FaHistory } from 'react-icons/fa';
 import { CiSettings } from 'react-icons/ci';
 import { Link, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Sidebar() {
   const location = useLocation();
 
   const handleLogout = () => {
-    // Displays native browser popup confirmation
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     
     if (confirmLogout) {
-      // Clear user data (example: localStorage or sessionStorage)
       localStorage.removeItem("token"); 
-      
-      // Redirect your user (example: refresh or routing)
+      toast.success("Logged out successfully");
       window.location.href = "/"; 
+    }
+    else{
+      toast.info("Logout cancelled");
     }
   };
   const menuItems = [

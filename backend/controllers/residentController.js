@@ -104,10 +104,10 @@ export const updateProfile = async (req, res) => {
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
     }
-    const {id} = req.params;
+    const {residentId} = req.params;
     // Find and update the resident, returning the newly updated document
  const updatedResident = await Resident.findByIdAndUpdate(
-  id, 
+  residentId, 
   { $set: updateData },
   { returnDocument: 'after' }
 ).populate("guests");

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import image from '../assets/people-avatar.jpeg';
 
 const Navbar = ({heading}) => {
  const [flat,setFlat] = useState(0);
@@ -19,7 +20,7 @@ useEffect(() => {
 
 
   return (
-    <nav className="fixed top-0 left-[180px] w-[calc(100%-180px)] z-50 bg-white border-b border-slate-300 px-8 py-1">
+    <nav className="fixed top-0 left-45 w-[calc(100%-180px)] z-50 bg-white border-b border-slate-300 px-8 py-1">
 
       <div className="h-10 flex items-center justify-between">
 
@@ -40,8 +41,8 @@ useEffect(() => {
           </div>
 
           <img
-            className="h-12 w-12 rounded-full object-cover"
-            src="image"
+            className="h-15 w-15 object-cover rounded-full"
+            src={image}
             alt="..."
           />
 

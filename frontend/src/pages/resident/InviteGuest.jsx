@@ -3,6 +3,7 @@ import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import ViewQR from "../../components/ViewQR";
 import API from "../../api";
+import {toast} from "react-toastify";
 
 const InviteGuest = () => {
   const [step, setStep] = useState(1);
@@ -35,7 +36,7 @@ const InviteGuest = () => {
 
     if (res.data.success) {
       setGeneratedGuest(res.data.guest);
-
+      toast.success("Guest invitation created successfully");
       setShowQR(true);
     }
   } catch (error) {
@@ -43,7 +44,7 @@ const InviteGuest = () => {
       error.response?.data || error.message
     );
 
-    alert("Failed to create invitation");
+    toast.error(error.response?.data?.message || "Failed to create guest invitation");
   } finally {
     setLoading(false);
   }
