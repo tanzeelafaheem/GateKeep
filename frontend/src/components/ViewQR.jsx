@@ -17,14 +17,14 @@ const ViewQR = ({
   const accessCode = "GK-8821-XP";
   const printRef = useRef(null);
   const qrData = JSON.stringify({
-    name: guestData.guestName,
+    name: guestData.name,
     phone: guestData.phone,
     date: guestData.visitDate,
     time: guestData.visitTime,
     purpose: guestData.purpose,
   });
   // Construct the text message template
-  const shareMessage = `Hello ${guestData.guestName},\n\nHere is your entry pass invitation.\n📅 Date: ${guestData.visitDate}\n🕒 Time: ${guestData.visitTime}\n🔑 Access Code: ${accessCode}\n\nPlease present the code/QR at the gate.`;
+  const shareMessage = `Hello ${guestData.name},\n\nHere is your entry pass invitation.\n📅 Date: ${guestData.visitDate}\n🕒 Time: ${guestData.visitTime}\n🔑 Access Code: ${accessCode}\n\nPlease present the code/QR at the gate.`;
 
   // Function 1: Fixed WhatsApp Share URL
   const handleWhatsAppShare = () => {
@@ -56,7 +56,7 @@ const handleDownloadPDF = () => {
     .join('\n');
 
   // 4. Safely construct values to protect against null/undefined fields
-  const guestName = guestData?.guestName || "N/A";
+  const guestName = guestData?.name || "N/A";
   const visitDate = guestData?.visitDate || "N/A";
   const visitTime = guestData?.visitTime || "N/A";
   const purpose = guestData?.purpose || "N/A";
@@ -111,17 +111,17 @@ const handleDownloadPDF = () => {
               
               <div class="flex justify-between text-sm">
                 <span class="text-gray-400 font-medium">Visit Date</span>
-                <span class="font-semibold text-gray-800 text-right">${visitDate}</span>
+                <span class="font-semibold text-gray-800 text-right">${new Date(guestData.visitDate).toLocaleDateString()}</span>
               </div>
               
               <div class="flex justify-between text-sm">
                 <span class="text-gray-400 font-medium">Visit Time</span>
-                <span class="font-semibold text-gray-800 text-right">${visitTime}</span>
+                <span class="font-semibold text-gray-800 text-right">${guestData.visitTime}</span>
               </div>
               
               <div class="flex justify-between text-sm">
                 <span class="text-gray-400 font-medium">Purpose</span>
-                <span class="font-semibold text-gray-800 text-right">${purpose}</span>
+                <span class="font-semibold text-gray-800 text-right">${guestData.purpose}</span>
               </div>
             </div>
 
@@ -311,7 +311,7 @@ const handleDownloadPDF = () => {
                 </p>
 
                 <p className="font-medium">
-                  {guestData.guestName}
+                  {guestData.name}
                 </p>
 
               </div>
@@ -325,7 +325,7 @@ const handleDownloadPDF = () => {
                 </p>
 
                 <p className="font-medium">
-                  {guestData.visitDate}
+                  {new Date(guestData.visitDate).toLocaleDateString()}
                 </p>
 
               </div>

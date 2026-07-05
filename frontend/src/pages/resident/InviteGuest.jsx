@@ -36,6 +36,7 @@ const InviteGuest = () => {
 
     if (res.data.success) {
       setGeneratedGuest(res.data.guest);
+      //console.log(res.data.guest);
       toast.success("Guest invitation created successfully");
       setShowQR(true);
     }
