@@ -23,6 +23,7 @@ const ViewQR = ({
     time: guestData.visitTime,
     purpose: guestData.purpose,
     status: guestData.status,
+    qrCode: guestData.qrCode,
   });
   // Construct the text message template
   const shareMessage = `Hello ${guestData.name},\n\nHere is your entry pass invitation.\n📅 Date: ${guestData.visitDate}\n🕒 Time: ${guestData.visitTime}\n🔑 Access Code: ${accessCode}\n\nPlease present the code/QR at the gate.`;

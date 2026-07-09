@@ -17,6 +17,8 @@ const InviteGuest = () => {
     visitTime: "",
     purpose: "",
     status: "PENDING",
+    qrCode:"",
+    qrImage:"",
   });
 
   const createGuestInvitation = async () => {

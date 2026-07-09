@@ -1,6 +1,7 @@
 import Guest from "../models/Guest.js";
 import Resident from "../models/Resident.js";
 import QRCode from "qrcode";
+import crypto from "crypto";
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +39,8 @@ export const createGuest = async (req, res) => {
       visitTime,
     });
 
-    const qrCode = await QRCode.toDataURL(qrPayload);
+    const qrImage = await QRCode.toDataURL(qrPayload);
+    const qrCode = crypto.randomBytes(8).toString("hex").toUpperCase();
 
     const guest = await Guest.create({
       resident: residentId,
@@ -47,6 +49,7 @@ export const createGuest = async (req, res) => {
       purpose,
       visitDate,
       visitTime,
+      qrImage,
       qrCode,
       status: "Pending",
     });

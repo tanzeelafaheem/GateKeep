@@ -32,11 +32,16 @@ const guestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     qrCode: {
-      type: String,
-      required: true,
-    },
+    type: String,
+    unique: true,
+    required: true,
+  },
+  // This stores the generated QR image
+  qrImage: {
+    type: String,
+    required: true,
+  },
 
     status: {
       type: String,
