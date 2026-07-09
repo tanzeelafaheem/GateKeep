@@ -140,9 +140,9 @@ export const getResidentGuests = async (req, res) => {
 
 export const getGuestById = async (req, res) => {
   try {
-    const { guestId } = req.params;
+    const { qrCode } = req.params;
 
-    const guest = await Guest.findById(guestId)
+    const guest = await Guest.findOne({ qrCode })
       .populate("resident", "name flatNo phone email");
 
     if (!guest) {

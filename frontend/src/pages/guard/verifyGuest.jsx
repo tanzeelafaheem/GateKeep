@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
+import API from "../../api";
 import {
   FaRegUserCircle,
   FaCheckCircle,
@@ -15,27 +16,27 @@ import { QRCodeCanvas } from "qrcode.react";
 import backgroundImage from '../../assets/scan.png'
 
 const statusConfig = {
-  PENDING: {
+  Pending: {
     bg: "bg-yellow-100",
     text: "text-yellow-700",
     label: "Pending Approval",
   },
-  ENTERED: {
+  Entered: {
     bg: "bg-green-100",
     text: "text-green-700",
     label: "Entered",
   },
-  EXPIRED: {
+  Expired: {
     bg: "bg-red-100",
     text: "text-red-700",
     label: "Expired",
   },
-  COMPLETED: {
+  Completed: {
     bg: "bg-blue-100",
     text: "text-blue-700",
     label: "Completed",
   },
-  REJECTED: {
+  Rejected: {
     bg: "bg-gray-100",
     text: "text-gray-700",
     label: "Rejected",
@@ -45,47 +46,51 @@ const statusConfig = {
 export default function GuardScanPage() {
   const { state } = useLocation();
 
-const guest = state?.guest;
+const [guest,setGuest] = useState(null);
+
+const getGuest=async()=>{
+  try {
+    const res = await API.get(`/api/guests/${state.qrCode}`);
+    setGuest(res.data.guest);
+    //console.log("Guest Data:", res.data.guest);
+  }
+  catch (error) {
+    console.error(
+      "Guest Fetch Error:",
+      error.response?.data || error.message
+    );
+  }
+}
+
+
+ useEffect(() => {
+  if (state?.qrCode) {
+    getGuest();
+  }
+}, []);
 
 if (!guest) {
   return (
-    <h2
-      style={{
-        textAlign: "center",
-        marginTop: 80,
-      }}
+    <div
+      className="min-h-screen flex justify-center items-center bg-cover bg-center"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      No Guest Data Found
-    </h2>
+      <div className="bg-white/80 px-8 py-5 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold">
+          Loading Guest Details...
+        </h2>
+      </div>
+    </div>
   );
 }
-const qrData = JSON.stringify({guest});
-  console.log(guest.status);
-  const currentStatus = statusConfig[(guest.status).toUpperCase()];
-  //console.log(statusConfig[guest.status]);
-  //console.log(currentStatus)
+const qrData = guest.qrCode;
+const currentStatus =statusConfig[guest.status]
 
   return (
+    
     <div className="min-h-screen w-full bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${backgroundImage})` }}>
-      {/* NAVBAR */}
-      {/* <div className="bg-white border-b sticky top-0 z-20">
-        <div className="flex justify-between items-center px-6 py-2">
-          <div>
-            <h1 className="text-xl font-bold text-slate-900">
-              Main North Gate
-            </h1>
-            <p className="text-xs tracking-wider text-gray-500">
-              GATEKEEP SECURITY SYSTEM
-            </p>
-          </div>
-
-          <FaRegUserCircle
-            size={34}
-            className="text-slate-700"
-          />
-        </div>
-      </div> */}
+      
 
       {/* PAGE */}
       <div className="max-w-6xl mx-auto p-5">
@@ -131,7 +136,7 @@ const qrData = JSON.stringify({guest});
                   </h2>
 
                   <p className="text-gray-800 text-sm mt-1">
-                    Guest ID : {guest.guestId}
+                    Guest ID : {guest.qrCode}
                   </p>
 
                   <div className="grid grid-cols-2 gap-4 mt-5">
@@ -141,17 +146,17 @@ const qrData = JSON.stringify({guest});
                       </p>
 
                       <p className="font-semibold">
-                        {guest.destination}
+                        {guest.resident.flatNo||"loading"}
                       </p>
                     </div>
 
                     <div>
                       <p className="text-xs text-gray-800 uppercase">
-                        Visit Type
+                        Visit Purpose
                       </p>
 
                       <p className="font-semibold">
-                        {guest.visitType}
+                        {guest.purpose}
                       </p>
                     </div>
 
@@ -161,17 +166,17 @@ const qrData = JSON.stringify({guest});
                       </p>
 
                       <p className="font-semibold">
-                        {guest.validTill}
+                        {new Date(guest.visitDate).toLocaleDateString()}
                       </p>
                     </div>
 
                     <div>
                       <p className="text-xs text-gray-800 uppercase">
-                        Entry Time
+                        Visit Time
                       </p>
 
                       <p className="font-semibold">
-                        {guest.entryTime}
+                        {guest.visitTime}
                       </p>
                     </div>
                   </div>
@@ -193,11 +198,11 @@ const qrData = JSON.stringify({guest});
 
                   <div>
                     <p className="font-semibold">
-                      {guest.residentName}
+                      {guest.resident.name || "Loading..."}
                     </p>
 
                     <p className="text-sm text-gray-700">
-                      Host • Apt 102
+                      Host • {guest.resident.flatNo}
                     </p>
                   </div>
                 </div>
@@ -263,7 +268,7 @@ const qrData = JSON.stringify({guest});
               </h3>
 
               {/* Pending */}
-              {guest.status === "PENDING" && (
+              {guest.status === "Pending" && (
                 <div className="grid grid-cols-2 gap-3">
                   <button className="bg-green-600 text-white py-3 rounded-xl font-semibold flex justify-center items-center gap-2">
                     <FaCheckCircle />
@@ -278,7 +283,7 @@ const qrData = JSON.stringify({guest});
               )}
 
               {/* Entered */}
-              {guest.status === "ENTERED" && (
+              {guest.status === "Entered" && (
                 <button className="w-full bg-slate-900 text-white py-4 rounded-xl font-semibold flex justify-center items-center gap-3">
                   <FaSignOutAlt />
                   Complete Visit
@@ -286,7 +291,7 @@ const qrData = JSON.stringify({guest});
               )}
 
               {/* Expired */}
-              {guest.status === "EXPIRED" && (
+              {guest.status === "Expired" && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
                   <p className="font-semibold text-red-600">
                     Pass Expired
@@ -295,7 +300,7 @@ const qrData = JSON.stringify({guest});
               )}
 
               {/* Completed */}
-              {guest.status === "COMPLETED" && (
+              {guest.status === "Completed" && (
                 <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
                   <p className="font-semibold text-green-600">
                     Visit Completed
@@ -304,7 +309,7 @@ const qrData = JSON.stringify({guest});
               )}
 
               {/* Rejected */}
-              {guest.status === "REJECTED" && (
+              {guest.status === "Rejected" && (
                 <div className="bg-gray-50 border rounded-xl p-4 text-center">
                   <p className="font-semibold text-gray-600">
                     Visit Rejected

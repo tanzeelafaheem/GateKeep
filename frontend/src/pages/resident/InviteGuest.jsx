@@ -38,7 +38,10 @@ const InviteGuest = () => {
     );
 
     if (res.data.success) {
-      setGeneratedGuest(res.data.guest);
+       setGeneratedGuest({
+    ...res.data.guest,
+    residentId: JSON.parse(localStorage.getItem("user"))._id
+  });
       console.log(res.data.guest);
       toast.success("Guest invitation created successfully");
       setShowQR(true);

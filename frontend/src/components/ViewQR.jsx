@@ -17,6 +17,7 @@ const ViewQR = ({
   const accessCode = "GK-8821-XP";
   const printRef = useRef(null);
   const qrData = JSON.stringify({
+    residentId: guestData.residentId,
     name: guestData.name,
     phone: guestData.phone,
     date: guestData.visitDate,

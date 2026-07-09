@@ -30,14 +30,16 @@ const QRScan = () => {
         visitDate: rawGuest.visitDate || rawGuest.date,
         visitTime: rawGuest.visitTime || rawGuest.time,
         status: rawGuest.status || "PENDING",
+        qrCode: rawGuest.qrCode || rawGuest.guestId || "N/A",
+        residentId: rawGuest.residentId,
       };
 
       // Navigate gate guard to verification portal
       navigate("/guard/qr-scan/verify", {
-        state: {
-          guest: normalizedGuest,
-        },
-      });
+      state: {
+      qrCode: visitorData.qrCode,
+  },
+});
     } else {
       console.error("Missing critical identity credentials inside QR package:", visitorData);
       alert("Invalid QR Code payload structure. Missing visitor name or phone registration.");
