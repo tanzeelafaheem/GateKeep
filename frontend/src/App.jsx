@@ -10,6 +10,7 @@ import Settings from './pages/resident/Settings';
 import InviteGuest from './pages/resident/InviteGuest';
 import ViewQR from './components/ViewQR';
 import QRscan from './pages/guard/QRscan';
+import Verify from './pages/guard/verifyGuest'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/resident/invite-guest" element={<InviteGuest />} />
         <Route path="/viewQR" element={<ViewQR />} />
         <Route path="/guard/qr-scan" element={<QRscan />} />
+        <Route path="/guard/qr-scan/verify" element={<Verify/>}/>
       </Routes>
 
       <ToastContainer 
