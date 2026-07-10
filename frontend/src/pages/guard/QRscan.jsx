@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import bg from "../../assets/scan.png";
 import { toast } from "react-toastify";
 import { FaUser,FaSignOutAlt,FaIdCard,FaDoorOpen,FaPhone } from "react-icons/fa";
+import guardImg from '../../assets/guard.jpeg'
 
 const QRScan = () => {
   const [showScanner, setShowScanner] = useState(false);
@@ -24,12 +25,17 @@ const QRScan = () => {
     }
   }, []);
    const handleLogout = () => {
-    // Clear out authenticated states & data paths
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    if(confirmLogout){
     localStorage.removeItem("guard"); 
     localStorage.removeItem("token"); // clear your auth token if any
     
-    toast.info("Logged out successfully");
+    toast.warn("Logged out successfully");
     navigate("/");
+    }
+    else{
+      toast.info("Logout cancelled")
+    }
   };
 
  const handleScanSuccess = (decodedText) => {
@@ -45,7 +51,7 @@ const QRScan = () => {
       state: { qrCode: decodedText }, 
     });
   } catch (error) {
-    console.error("QR Scan Navigation Error:", error.message);
+    toast.error("QR Scan Navigation Error:", error.message);
   }
 };
 
@@ -70,9 +76,9 @@ const QRScan = () => {
           <div className="relative mr-8">
             <button 
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-300 transition-colors focus:outline-none"
+              className="p-1 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-300 transition-colors focus:outline-none"
             >
-              <FaUser className="text-2xl text-gray-700" />
+              <img className="h-15 w-15 object-cover rounded-full" src={guardImg} alt="" />
             </button>
 
             {/* Dropdown Menu */}
@@ -97,7 +103,7 @@ const QRScan = () => {
                     <div className="px-4 py-2 space-y-2">
                       <div className="flex items-center text-sm text-gray-600">
                         <FaIdCard className="mr-2 text-gray-400 shrink-0" />
-                        <span>ID: {guard.employeeId}</span>
+                        <span>Employee ID: {guard.employeeId}</span>
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <FaDoorOpen className="mr-2 text-gray-400 shrink-0" />
@@ -116,7 +122,7 @@ const QRScan = () => {
                       className="w-full flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer text-left font-medium"
                     >
                       <FaSignOutAlt className="mr-2" />
-                      Sign Out
+                      Log Out
                     </button>
                   </div>
                 </div>

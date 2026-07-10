@@ -2,6 +2,7 @@ import { FaHome, FaUserFriends, FaQrcode, FaHistory } from 'react-icons/fa';
 import { CiSettings } from 'react-icons/ci';
 import { Link, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import {FaSignOutAlt} from 'react-icons/fa'
 
 function Sidebar() {
   const location = useLocation();
@@ -10,8 +11,8 @@ function Sidebar() {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     
     if (confirmLogout) {
-      localStorage.removeItem("token"); 
-      toast.success("Logged out successfully");
+      localStorage.removeItem("user"); 
+      toast.warn("Logged out successfully");
       window.location.href = "/"; 
     }
     else{
@@ -53,6 +54,7 @@ function Sidebar() {
       </div>
       <button className="absolute bottom-5 left-4 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 rounded-lg px-6 py-2.5 text-sm text-white font-medium w-35 cursor-pointer"
       onClick={handleLogout}>
+        <FaSignOutAlt />
         Logout
       </button>
     </div>

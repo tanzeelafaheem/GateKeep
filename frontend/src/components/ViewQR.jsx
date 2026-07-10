@@ -271,7 +271,7 @@ const handleDownloadPDF = () => {
           mt-1
           ">
 
-            GK-8821-XP
+            {guestData.qrCode}
 
           </h2>
 
