@@ -1,72 +1,131 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import QRScanner from "../../components/QRScanner";
 import { useNavigate } from "react-router-dom";
 import bg from "../../assets/scan.png";
+import { toast } from "react-toastify";
+import { FaUser,FaSignOutAlt,FaIdCard,FaDoorOpen,FaPhone } from "react-icons/fa";
 
 const QRScan = () => {
   const [showScanner, setShowScanner] = useState(false);
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [guard, setGuard] = useState(null);
 
-  const handleScanSuccess = (decodedText) => {
-  // 1. Instantly toggle active flag down to shut off webcam streams
-  setShowScanner(false);
 
-  // 2. Parse the flat data format directly
-  try {
-    const visitorData = JSON.parse(decodedText);
-    
-    // Fallback normalization logic handles both nested and flat schemas safely
-    const rawGuest = visitorData?.guest ? visitorData.guest : visitorData;
-
-    if (rawGuest?.name && rawGuest?.phone) {
-      console.log("Visitor Data successfully parsed:", rawGuest);
-      
-      // Remap flat keys safely to meet your /guard/verify UI specifications
-      const normalizedGuest = {
-        name: rawGuest.name,
-        phone: rawGuest.phone,
-        purpose: rawGuest.purpose || "Not Specified",
-        visitDate: rawGuest.visitDate || rawGuest.date,
-        visitTime: rawGuest.visitTime || rawGuest.time,
-        status: rawGuest.status || "PENDING",
-        qrCode: rawGuest.qrCode || rawGuest.guestId || "N/A",
-        residentId: rawGuest.residentId,
-      };
-
-      // Navigate gate guard to verification portal
-      navigate("/guard/qr-scan/verify", {
-      state: {
-      qrCode: visitorData.qrCode,
-  },
-});
-    } else {
-      console.error("Missing critical identity credentials inside QR package:", visitorData);
-      alert("Invalid QR Code payload structure. Missing visitor name or phone registration.");
+  useEffect(() => {
+    const storedGuard = localStorage.getItem("guard"); 
+    if (storedGuard) {
+      try {
+        setGuard(JSON.parse(storedGuard));
+      } catch (error) {
+        console.error("Error parsing guard data from localStorage", error);
+      }
     }
-  } catch (e) {
-    console.error("Invalid QR payload structure parsed on reception intake:", e);
-    alert("Could not process QR configuration data.");
+  }, []);
+   const handleLogout = () => {
+    // Clear out authenticated states & data paths
+    localStorage.removeItem("guard"); 
+    localStorage.removeItem("token"); // clear your auth token if any
+    
+    toast.info("Logged out successfully");
+    navigate("/");
+  };
+
+ const handleScanSuccess = (decodedText) => {
+  try {
+    setShowScanner(false);
+    toast.success("QR Code scanned successfully!");
+
+    if (!decodedText) {
+      throw new Error("No data found in QR code");
+    }
+
+    navigate("/guard/qr-scan/verify", { 
+      state: { qrCode: decodedText }, 
+    });
+  } catch (error) {
+    console.error("QR Scan Navigation Error:", error.message);
   }
 };
 
 
+
   return (
     <>
-      <Navbar />
-
       <div className="h-[calc(100vh-70px)] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex justify-between items-center mx-5 mt-5 mb-2 z-10">
+        <div className="flex justify-between items-center mx-5 mt-5 mb-2 z-30">
           <div>
-            <h1 className="text-2xl font-bold">Main North Gate</h1>
+            {/* Dynamically fallback to object schema values */}
+            <h1 className="text-2xl font-bold">
+              {guard?.gate || "Main North Gate"}
+            </h1>
             <p className="text-gray-600 text-sm">
               GATEKEEP SECURITY SYSTEM
             </p>
           </div>
+          
+          {/* User Profile Dropdown Container */}
+          <div className="relative mr-8">
+            <button 
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-300 transition-colors focus:outline-none"
+            >
+              <FaUser className="text-2xl text-gray-700" />
+            </button>
+
+            {/* Dropdown Menu */}
+            {isOpen && (
+              <>
+                {/* Backdrop overlay to close dropdown when clicking outside */}
+                <div 
+                  className="fixed inset-0 z-40 cursor-default" 
+                  onClick={() => setIsOpen(false)}
+                />
+                
+                {/* Menu Card */}
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-3 z-55 animate-in fade-in zoom-in-95 duration-100">
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <p className="text-xs text-gray-400 font-semibold tracking-wider uppercase">Active Guard</p>
+                    <p className="text-base font-bold text-gray-800 mt-0.5">
+                      {guard?.name || "Loading..."}
+                    </p>
+                  </div>
+                  
+                  {guard && (
+                    <div className="px-4 py-2 space-y-2">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <FaIdCard className="mr-2 text-gray-400 shrink-0" />
+                        <span>ID: {guard.employeeId}</span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <FaDoorOpen className="mr-2 text-gray-400 shrink-0" />
+                        <span className="truncate">Station: {guard.gate}</span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <FaPhone className="mr-2 text-gray-400 shrink-0" />
+                        <span>Contact: {guard.phone}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="border-t border-gray-100 mt-2 pt-1">
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer text-left font-medium"
+                    >
+                      <FaSignOutAlt className="mr-2" />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
-        <div className="relative flex-1 overflow-hidden">
+        <div className="relative flex-1 overflow-hidden ">
           {/* Background */}
           <img
             src={bg}
@@ -81,7 +140,7 @@ const QRScan = () => {
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <div className="relative w-72 h-72 rounded-xl overflow-hidden bg-black/30">
               
-              {/* CAMERA LAYER: Keeps it in its own isolated visual track */}
+              {/* CAMERA LAYER */}
               <div
                 className="absolute inset-0 w-full h-full z-1"
                 style={{
@@ -101,21 +160,18 @@ const QRScan = () => {
                 </div>
               )}
 
-              {/* OVERLAY GRAPHICS LAYER: Separated out to prevent visual blockage */}
+              {/* OVERLAY GRAPHICS LAYER */}
               <div className="absolute inset-0 pointer-events-none z-10">
-                {/* Scanner Border Frame */}
                 <div className="absolute inset-0 border-2 border-white/40 rounded-xl" />
 
-                {/* Animated Scanning Laser Line */}
                 {showScanner && (
                   <div className="absolute left-0 w-full h-1 bg-green-400 shadow-[0_0_8px_#4ade80] animate-scan" />
                 )}
 
-                {/* Scope Target Corners */}
                 <div className="absolute top-0 left-0 w-8 h-8 border-l-4 border-t-4 border-green-400 rounded-tl-sm"></div>
                 <div className="absolute top-0 right-0 w-8 h-8 border-r-4 border-t-4 border-green-400 rounded-tr-sm"></div>
                 <div className="absolute bottom-0 left-0 w-8 h-8 border-l-4 border-b-4 border-green-400 rounded-bl-sm"></div>
-                <div className="absolute bottom-0 right-0 w-8 h-8 border-r-4 border-b-4 border-green-400 rounded-br-sm"></div>
+                <div className="absolute bottom-0 right-0 w-8 h-8 border-r-4 border-b-4 border-green-400 rounded-tr-sm"></div>
               </div>
 
             </div>
@@ -151,5 +207,5 @@ const QRScan = () => {
     </>
   );
 };
-
 export default QRScan;
+

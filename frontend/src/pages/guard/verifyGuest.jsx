@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { useEffect,useState } from "react";
 import API from "../../api";
+import {toast} from "react-toastify"
 import {
   FaRegUserCircle,
   FaCheckCircle,
@@ -48,15 +49,22 @@ export default function GuardScanPage() {
 
 const [guest,setGuest] = useState(null);
 
+const getInitials = (name) => {
+  if (!name) return "";
+  const parts = name.trim().split(/\s+/);
+  const first = parts[0]?.charAt(0) || "";
+  const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : "";
+  return `${first}${last}`.toUpperCase();
+};
+
 const getGuest=async()=>{
   try {
     const res = await API.get(`/api/guests/${state.qrCode}`);
     setGuest(res.data.guest);
-    //console.log("Guest Data:", res.data.guest);
+    //console.log("Guest Data:", res.data.guest.resident);
   }
   catch (error) {
-    console.error(
-      "Guest Fetch Error:",
+    toast.error(
       error.response?.data || error.message
     );
   }
@@ -83,8 +91,70 @@ if (!guest) {
     </div>
   );
 }
-const qrData = guest.qrCode;
 const currentStatus =statusConfig[guest.status]
+
+const approveGuest = async () => {
+  try {
+    const res = await API.patch(`/api/guests/approve/${guest._id}`);
+
+    if (res.data.success) {
+      setGuest(res.data.guest);
+      toast.success(res.data.message);
+    }
+  } catch (error) {
+    toast.error(
+      error.response?.data || error.message
+    );
+  }
+};
+
+const rejectGuest = async () => {
+  try {
+    const res = await API.patch(`/api/guests/reject/${guest._id}`);
+
+    if (res.data.success) {
+      setGuest(res.data.guest);
+      toast.success(res.data.message);
+    }
+  } catch (error) {
+    toast.error(
+      error.response?.data || error.message
+    );
+  }
+};
+
+const completeVisit = async () => {
+  try {
+    const res = await API.patch(`/api/guests/complete/${guest._id}`);
+
+    if (res.data.success) {
+      setGuest(res.data.guest);
+      toast.success(res.data.message);
+    }
+  } catch (error) {
+    toast.error(
+      error.response?.data || error.message
+    );
+  }
+};
+
+const deleteGuest = async () => {
+  try {
+    const res = await API.delete(`/api/guests/${guest._id}`);
+
+    if (res.data.success) {
+      toast.success(res.data.message);
+    }
+  } catch (error) {
+    toast.error(
+      error.response?.data || error.message
+    );
+  }
+};
+const handleCall = () => {
+  const phone=guest.resident.phone;
+  window.location.href = `tel:${phone}`;
+};
 
   return (
     
@@ -124,11 +194,9 @@ const currentStatus =statusConfig[guest.status]
             {/* GUEST CARD */}
             <div className="bg-gray-200 opacity-85 rounded-3xl shadow-sm p-6">
               <div className="flex gap-4">
-                <img
-                  src="https://i.pravatar.cc/150?img=12"
-                  alt=""
-                  className="w-20 h-20 rounded-2xl object-cover"
-                />
+                <div className="w-20 h-20 rounded-full bg-blue-300 flex items-center justify-center font-bold">
+                    {getInitials(guest.name)}
+                  </div>
 
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold">
@@ -193,12 +261,12 @@ const currentStatus =statusConfig[guest.status]
               <div className="flex items-center justify-between">
                 <div className="flex gap-4 items-center">
                   <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center font-bold">
-                    SK
+                    {getInitials(guest.resident.name)}
                   </div>
 
                   <div>
                     <p className="font-semibold">
-                      {guest.resident.name || "Loading..."}
+                      {guest.resident.name}
                     </p>
 
                     <p className="text-sm text-gray-700">
@@ -207,7 +275,8 @@ const currentStatus =statusConfig[guest.status]
                   </div>
                 </div>
 
-                <button className="border p-3 rounded-xl hover:bg-gray-50">
+                <button className="border p-3 rounded-xl hover:bg-gray-50"
+                onClick={handleCall}>
                   <FaPhone />
                 </button>
               </div>
@@ -250,7 +319,7 @@ const currentStatus =statusConfig[guest.status]
               <div className="flex justify-center">
                 <div className="w-52 h-52 bg-slate-100 rounded-2xl flex items-center justify-center">
                   <QRCodeCanvas
-              value={qrData}
+              value={guest.qrCode}
               size={180}
             />
                 </div>
@@ -270,12 +339,14 @@ const currentStatus =statusConfig[guest.status]
               {/* Pending */}
               {guest.status === "Pending" && (
                 <div className="grid grid-cols-2 gap-3">
-                  <button className="bg-green-600 text-white py-3 rounded-xl font-semibold flex justify-center items-center gap-2">
+                  <button className="bg-green-600 text-white py-3 rounded-xl font-semibold flex justify-center items-center gap-2"
+                  onClick={approveGuest}>
                     <FaCheckCircle />
                     Accept
                   </button>
 
-                  <button className="bg-red-600 text-white py-3 rounded-xl font-semibold flex justify-center items-center gap-2">
+                  <button className="bg-red-600 text-white py-3 rounded-xl font-semibold flex justify-center items-center gap-2"
+                  onClick={rejectGuest}>
                     <FaTimesCircle />
                     Reject
                   </button>
@@ -284,7 +355,8 @@ const currentStatus =statusConfig[guest.status]
 
               {/* Entered */}
               {guest.status === "Entered" && (
-                <button className="w-full bg-slate-900 text-white py-4 rounded-xl font-semibold flex justify-center items-center gap-3">
+                <button className="w-full bg-slate-900 text-white py-4 rounded-xl font-semibold flex justify-center items-center gap-3"
+                onClick={completeVisit}>
                   <FaSignOutAlt />
                   Complete Visit
                 </button>
@@ -292,16 +364,18 @@ const currentStatus =statusConfig[guest.status]
 
               {/* Expired */}
               {guest.status === "Expired" && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center"
+                onClick={deleteGuest}>
                   <p className="font-semibold text-red-600">
-                    Pass Expired
+                    Pass Expired/Delete 
                   </p>
                 </div>
               )}
 
               {/* Completed */}
               {guest.status === "Completed" && (
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center"
+                onClick={completeVisit}>
                   <p className="font-semibold text-green-600">
                     Visit Completed
                   </p>
@@ -310,7 +384,8 @@ const currentStatus =statusConfig[guest.status]
 
               {/* Rejected */}
               {guest.status === "Rejected" && (
-                <div className="bg-gray-50 border rounded-xl p-4 text-center">
+                <div className="bg-gray-50 border rounded-xl p-4 text-center"
+                onClick={rejectGuest}>
                   <p className="font-semibold text-gray-600">
                     Visit Rejected
                   </p>

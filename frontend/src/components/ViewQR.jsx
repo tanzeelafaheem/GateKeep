@@ -245,7 +245,7 @@ const handleDownloadPDF = () => {
           ">
 
             <QRCodeCanvas
-              value={qrData}
+              value={guestData.qrCode}
               size={180}
             />
 

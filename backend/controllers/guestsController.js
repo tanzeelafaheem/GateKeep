@@ -257,7 +257,7 @@ export const rejectGuest = async (req, res) => {
 
     await guest.save();
 
-    res.status(401).json({
+    res.status(200).json({
       success: true,
       message: "Guest entry not approved",
       guest,

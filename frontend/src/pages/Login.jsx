@@ -57,11 +57,14 @@ const Login = () => {
      localStorage.setItem("role", response.data.role);  
      localStorage.setItem("user",JSON.stringify(response.data.user));
 
+
       toast.success("Login Successful");
 
       if (role === "Resident") {
         navigate("/resident/dashboard");
       } else if (role === "Guard") {
+        localStorage.setItem("guard", JSON.stringify(data.guard));
+        console.log("Guard data stored in localStorage:", data.guard);
         navigate("/guard/qr-scan");
       } else {
         navigate("/admin/dashboard");

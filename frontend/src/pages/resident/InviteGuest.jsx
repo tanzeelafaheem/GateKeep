@@ -20,6 +20,7 @@ const InviteGuest = () => {
     qrCode:"",
     qrImage:"",
   });
+  const [token,setToken]=useState(null);
 
   const createGuestInvitation = async () => {
   try {
@@ -42,6 +43,7 @@ const InviteGuest = () => {
     ...res.data.guest,
     residentId: JSON.parse(localStorage.getItem("user"))._id
   });
+  setToken(res.data.guest.qrCode);
       console.log(res.data.guest);
       toast.success("Guest invitation created successfully");
       setShowQR(true);
