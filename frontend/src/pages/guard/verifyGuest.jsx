@@ -1,8 +1,9 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import { useEffect,useState } from "react";
 import API from "../../api";
 import {toast} from "react-toastify"
+import { useLocation, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 import {
   FaRegUserCircle,
   FaCheckCircle,
@@ -46,6 +47,7 @@ const statusConfig = {
 
 export default function GuardScanPage() {
   const { state } = useLocation();
+  const navigate = useNavigate();
 
 const [guest,setGuest] = useState(null);
 
@@ -114,7 +116,7 @@ const rejectGuest = async () => {
 
     if (res.data.success) {
       setGuest(res.data.guest);
-      toast.success(res.data.message);
+      toast.warn(res.data.message);
     }
   } catch (error) {
     toast.error(
@@ -163,6 +165,7 @@ const handleCall = () => {
       
 
       {/* PAGE */}
+      
       <div className="max-w-6xl mx-auto p-5">
         {/* STATUS BAR */}
         <div
@@ -392,6 +395,16 @@ const handleCall = () => {
                 </div>
               )}
             </div>
+            {/* Back Button */}
+<div className="mb-4">
+  <button
+    onClick={() => navigate("/guard/qr-scan")}
+    className="flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-xl shadow-md font-medium text-slate-700 transition cursor-pointer"
+  >
+    <FaArrowLeft />
+    Back to QR Scanner
+  </button>
+</div>
           </div>
         </div>
       </div>

@@ -142,7 +142,7 @@ const MyGuests = () => {
                     </td>
 
                     <td className="px-6 py-4">
-                      {entry.visitDate}
+                       {new Date(entry.visitDate).toLocaleDateString()}
                     </td>
 
                     <td className="px-6 py-4">

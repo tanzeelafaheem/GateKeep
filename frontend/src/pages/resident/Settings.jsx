@@ -4,6 +4,7 @@ import Sidebar from "../../components/Sidebar";
 import API from "../../api";
 import {toast} from "react-toastify";
 import image from "../../assets/people-avatar.jpeg";
+import { FaHouseUser } from "react-icons/fa";
 
 const Settings = () => {
    const residentId = JSON.parse(localStorage.getItem("user"))?._id;
@@ -62,11 +63,10 @@ const Settings = () => {
           <div className="grid grid-cols-3 gap-4 mb-6">
             {/* Profile Card */}
             <div className="col-span-2 bg-white rounded-xl shadow-sm p-5 flex items-center gap-4">
-              <img
-                src={image}
-                alt="Profile"
-                className="w-18 h-18 rounded-full border-2 border-gray-200"
-              />
+              <div 
+                className="h-18 w-18 rounded-full overflow-hidden bg-gray-200 flex justify-center items-center ">
+                <FaHouseUser className="h-14 w-14 text-[#243b52]" />
+              </div>
 
               <div>
                 <h2 className="text-2xl font-bold text-gray-800">

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import image from '../assets/people-avatar.jpeg';
+import { FaHouseUser } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({heading}) => {
  const [flat,setFlat] = useState(0);
 const [name, setName] = useState("");
+const navigate=useNavigate();
 
 useEffect(() => {
   const savedUserJson = localStorage.getItem("user");
@@ -39,12 +42,13 @@ useEffect(() => {
               Flat {flat}
             </span>
           </div>
-
-          <img
-            className="h-15 w-15 object-cover rounded-full"
-            src={image}
-            alt="..."
-          />
+          
+          <div 
+  className="h-10 w-10 rounded-full overflow-hidden bg-gray-100 flex justify-center items-center hover:bg-gray-300 transition-colors duration-150 cursor-pointer"
+  onClick={() => navigate('/resident/settings')}
+>
+  <FaHouseUser className="h-8 w-8 text-[#243b52]" />
+</div>
 
         </div>
 

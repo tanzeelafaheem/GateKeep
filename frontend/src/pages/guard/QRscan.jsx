@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 import Navbar from "../../components/Navbar";
-import QRScanner from "../../components/QRScanner";
+import QRscanner from "../../components/QRscanner";
 import { useNavigate } from "react-router-dom";
 import bg from "../../assets/scan.png";
 import { toast } from "react-toastify";
@@ -93,7 +93,7 @@ const QRScan = () => {
                 {/* Menu Card */}
                 <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-3 z-55 animate-in fade-in zoom-in-95 duration-100">
                   <div className="px-4 py-2 border-b border-gray-100">
-                    <p className="text-xs text-gray-400 font-semibold tracking-wider uppercase">Active Guard</p>
+                    <p className="text-xs text-gray-400 font-semibold tracking-wider uppercase">Active security personnel</p>
                     <p className="text-base font-bold text-gray-800 mt-0.5">
                       {guard?.name || "Loading..."}
                     </p>
