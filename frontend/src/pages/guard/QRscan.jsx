@@ -153,7 +153,7 @@ const QRScan = () => {
                   display: showScanner ? "block" : "none",
                 }}
               >
-                <QRScanner
+                <QRscanner
                   onScanSuccess={handleScanSuccess}
                   active={showScanner}
                 />
